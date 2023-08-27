@@ -23,12 +23,8 @@ export class AppComponent implements OnInit, OnDestroy {
         private router: Router,
         public spinnerService: SpinnerService,
         private titleService: Title) { }
-    
+
     ngOnInit(): void {
-        console.log(
-        `Preloading Modules: `,
-        this.preloadingStrategy.preloadedModules
-        );
         //this.setPageTitles();
         this.setMessageServiceOnRefresh();
     }
@@ -38,13 +34,11 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     onActivate($event: any, routerOutlet: RouterOutlet): void {
-        console.log('Activated Component', $event, routerOutlet);
-        // another way to set titles
         this.titleService.setTitle(routerOutlet.activatedRouteData.title);
     }
 
     onDeactivate($event: any, routerOutlet: RouterOutlet): void {
-        console.log('Deactivated Component', $event, routerOutlet);
+        
     }
 
     onDisplayMessages(): void {
@@ -55,7 +49,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private setPageTitles(): void {
         this.sub.navigationEnd = this.router.events
             .pipe(
-              
+
               filter(event => event instanceof NavigationEnd),
               map(() => this.router.routerState.root),
               map(route => {
@@ -70,13 +64,13 @@ export class AppComponent implements OnInit, OnDestroy {
             .subscribe(
                 data => this.titleService.setTitle(data.title)
             );
-    } 
+    }
 
     private setMessageServiceOnRefresh(): void {
         this.sub.navigationStart = this.router.events
           .pipe(filter(event => event instanceof NavigationStart))
           .subscribe(event => {
             this.messagesService.isDisplayed = (event as NavigationStart).url.includes('messages:');
-          });  
+          });
     }
 }
